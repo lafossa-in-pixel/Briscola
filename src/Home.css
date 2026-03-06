@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Variabili colore globali */
+:root {
+  --green-dark: #0d3b1a; --green-mid: #145a2c; --green-felt: #1a7a3a;
+  --gold: #c9a84c; --gold-light: #f0d080; --gold-shine: #fff8dc; --cream: #fdf6e3;
+}
+html, body, #root { width: 100%; height: 100%; overflow: hidden; }
+
+/* ── Sfondo: tavolo da gioco ── */
+.home-root {
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; font-family: 'Cinzel', serif;
+  background-color: var(--green-dark);
+  /* Gradiente radiale che simula la luce al centro del tavolo */
+  background-image: radial-gradient(ellipse 80% 70% at 50% 40%,
+    var(--green-felt) 0%, var(--green-mid) 55%, var(--green-dark) 100%);
+}
+/* Texture feltro: pattern di puntini sottili sovrapposto allo sfondo */
+.home-root::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
+}
+/* Bordo dorato interno */
+.home-root::after {
+  content: ''; position: absolute; inset: 18px; pointer-events: none; z-index: 1;
+  border: 2px solid var(--gold); border-radius: 24px; opacity: 0.55;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,0,0,0.5);
+}
+
+/* ── Contenuto centrale ── */
+/* Parte invisibile e abbassata finché la pagina non è caricata,
+   poi sale e diventa visibile (animazione di entrata) */
+.content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.content.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Titolo ── */
+.title-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: -28px; /* si sovrappone leggermente alle carte sotto */
+  z-index: 3; position: relative;
+}
+.title-subtitle {
+  font-weight: 600; font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+  letter-spacing: 0.55em; color: var(--gold); text-transform: uppercase;
+  opacity: 0.85; margin-bottom: 6px;
+}
+.title {
+  font-family: 'Cinzel Decorative', cursive; font-weight: 900;
+  font-size: clamp(4rem, 10vw, 8.5rem); line-height: 0.85;
+  letter-spacing: 0.04em; text-align: center;
+  /* Gradiente oro applicato al testo */
+  background: linear-gradient(160deg,
+    var(--gold-shine) 0%, var(--gold-light) 30%,
+    var(--gold) 55%, #a07428 80%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.7)) drop-shadow(0 2px 4px rgba(0,0,0,0.9));
+}
+/* Linea decorativa sotto il titolo */
+.title-underline {
+  width: 60%; height: 2px; margin-top: 8px; border-radius: 2px; opacity: 0.7;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ── Carte ── */
+.aces-row {
+  display: flex; align-items: flex-start; position: relative; z-index: 2;
+}
+.ace-card {
+  width: clamp(72px, 9vw, 108px); height: clamp(100px, 12.5vw, 152px);
+  background: var(--cream); border-radius: 10px; position: relative;
+  border: 1px solid rgba(0,0,0,0.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4),
+              inset 0 1px 0 rgba(255,255,255,0.9);
+  transform-origin: bottom center; overflow: hidden;
+  /* Animazione di ingresso: le carte salgono dal basso */
+  animation: card-float 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+  cursor: default; transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+/* Hover: la carta si alza e torna dritta */
+.ace-card:hover {
+  transform: translateY(-14px) rotate(0deg) !important; z-index: 10;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.5),
+              inset 0 1px 0 rgba(255,255,255,0.9);
+}
+/* Disposizione a ventaglio: ogni carta ha una rotazione diversa */
+.ace-card:nth-child(1) { transform: rotate(-9deg) translateY(6px); }
+.ace-card:nth-child(2) { transform: rotate(-3deg) translateY(2px); }
+.ace-card:nth-child(3) { transform: rotate(3deg)  translateY(2px); }
+.ace-card:nth-child(4) { transform: rotate(9deg)  translateY(6px); }
+
+@keyframes card-float {
+  0%   { opacity: 0; transform: translateY(60px) scale(0.8); }
+  100% { opacity: 1; }
+}
+.ace-inner {
+  width: 100%; height: 100%; padding: 7px 8px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: relative;
+}
+.corner-top  { align-self: flex-start; }
+.corner-bottom { align-self: flex-end; transform: rotate(180deg); }
+/* Simbolo grande centrato nella carta */
+.ace-center {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  display: flex; align-items: center; justify-content: center;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.14));
+}
+/* Riflesso lucido sul lato sinistro della carta */
+.ace-shine {
+  position: absolute; top: 0; left: 0; width: 50%; height: 100%;
+  background: linear-gradient(105deg, rgba(255,255,255,0.32) 0%, transparent 60%);
+  border-radius: 10px 0 0 10px; pointer-events: none;
+}
+
+/* ── Bottoni ── */
+.buttons-row {
+  display: flex; gap: clamp(16px, 3vw, 32px);
+  margin-top: clamp(32px, 5vw, 52px);
+  animation: fade-up 0.7s 0.55s ease both;
+}
+/* Animazione riutilizzabile: sale dal basso con fade */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: clamp(12px, 2vw, 16px) clamp(28px, 4vw, 48px);
+  border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem); letter-spacing: 0.12em;
+  text-transform: uppercase; position: relative; overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+/* Overlay bianco semi-trasparente al passaggio del mouse */
+.btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,0); transition: background 0.2s ease;
+}
+.btn:hover::before { background: rgba(255,255,255,0.1); }
+.btn:active { transform: scale(0.96) !important; }
+
+/* Bottone Play: sfondo oro pieno */
+.btn-play {
+  background: linear-gradient(135deg, #c9a84c 0%, #f0d080 45%, #c9a84c 100%);
+  color: #1a0e00;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.5), 0 2px 6px rgba(0,0,0,0.4),
+              inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.btn-play:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 32px rgba(201,168,76,0.6), 0 4px 12px rgba(0,0,0,0.4),
+              inset 0 1px 0 rgba(255,255,255,0.5);
+}
+/* Bottone Stats: sfondo trasparente con bordo dorato */
+.btn-stats {
+  background: rgba(255,255,255,0.06); color: var(--gold-light);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.3),
+              inset 0 0 0 1.5px rgba(201,168,76,0.5);
+}
+.btn-stats:hover {
+  transform: translateY(-3px) scale(1.03); background: rgba(255,255,255,0.11);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.35),
+              inset 0 0 0 1.5px rgba(201,168,76,0.8);
+}
+.btn-icon { display: flex; align-items: center; opacity: 0.9; }
+
+/* ── Scritta in basso ── */
+.tagline {
+  margin-top: 28px; font-size: clamp(0.65rem, 1vw, 0.78rem);
+  letter-spacing: 0.3em; color: rgba(201,168,76,0.45); text-transform: uppercase;
+  animation: fade-up 0.7s 0.75s ease both;
+}

@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-dark: #0d3b1a; --green-mid: #145a2c; --green-felt: #1a7a3a;
+  --gold: #c9a84c; --gold-light: #f0d080; --cream: #fdf6e3;
+}
+
+html, body, #root { width: 100%; height: 100%; overflow: hidden; }
+
+/* ── Sfondo tavolo ── */
+.game_table {
+  background-color: var(--green-dark);
+  background-image: radial-gradient(ellipse 80% 70% at 50% 40%,
+    var(--green-felt) 0%, var(--green-mid) 55%, var(--green-dark) 100%);
+  height: 100vh; width: 100vw;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden; color: white;
+  font-family: 'Cinzel', serif; position: relative;
+}
+.game_table::before {
+  content: ''; position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
+}
+.game_table::after {
+  content: ''; position: absolute; inset: 18px;
+  border: 2px solid var(--gold); border-radius: 24px;
+  opacity: 0.55; pointer-events: none; z-index: 1;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,0,0,0.5);
+}
+.game_table > * { position: relative; z-index: 2; }
+
+/* ── Carta ── */
+.Card {
+  width: 70px; height: 110px;
+  border-radius: 8px; border: 1px solid rgba(0,0,0,0.15);
+  background-color: var(--cream);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.9);
+  cursor: pointer; font-family: 'Cinzel', serif;
+  position: relative; overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.Card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+/* ── Dorso carta ── */
+.back {
+  background-color: #8b1a1a;
+  background-image: repeating-linear-gradient(
+    45deg, transparent, transparent 10px, rgba(0,0,0,0.12) 20px);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+.back:hover { transform: none; }
+.back-logo {
+  width: 38px; height: 38px;
+  object-fit: contain; opacity: 1; pointer-events: none;
+  filter: brightness(0) invert(1);
+}
+
+/* ── Mani ── */
+.hand { display: flex; justify-content: center; align-items: center; gap: 15px; padding: 20px; }
+.opponent_hand { margin-top: 10px; }
+.player_hand   { margin-bottom: 20px; }
+
+/* ── Centro tavolo ── */
+.center_table { display: flex; justify-content: space-around; align-items: center; flex: 1; }
+
+/* ── Mazzo ── */
+.deck { position: relative; width: 120px; height: 120px; }
+.briscola_card { position: absolute; top: 5px; left: 80px; transform: rotate(90deg); z-index: 1; }
+.deck_card { position: absolute; top: 0; left: 0; z-index: 2; }
+.deck-count { color: white; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 50%; font-size: 0.8rem; font-weight: bold; }
+
+/* ── Area di gioco ── */
+.play_area { display: flex; gap: 10px; }
+
+/* ── Zona punti ── */
+.points_area { display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 20px 0; }
+.point_pile  { position: relative; width: 70px; height: 110px; }
+.pile_card   { position: absolute; top: 0; left: 0; box-shadow: 1px 1px 6px rgba(0,0,0,0.7); }
+.opponent_points { margin-top: -30px; }
+.player_points   { margin-bottom: -30px; }
+
+/* ── Bottone ← Home ── */
+.btn-back {
+  position: absolute; top: 36px; left: 44px; z-index: 10;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.8rem, 1.2vw, 0.95rem); letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold-light);
+  background: rgba(255,255,255,0.06); backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 0 0 1.5px rgba(201,168,76,0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn-back:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: rgba(255,255,255,0.11);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(201,168,76,0.8);
+}

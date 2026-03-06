@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-dark: #0d3b1a; --green-mid: #145a2c; --green-felt: #1a7a3a;
+  --gold: #c9a84c; --gold-light: #f0d080; --gold-shine: #fff8dc; --cream: #fdf6e3;
+}
+
+html, body, #root { width: 100%; height: 100%; overflow: hidden; }
+
+/* ── Sfondo (identico a Home e Game) ── */
+.stats-root {
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  font-family: 'Cinzel', serif;
+  background-color: var(--green-dark);
+  background-image: radial-gradient(ellipse 80% 70% at 50% 40%,
+    var(--green-felt) 0%, var(--green-mid) 55%, var(--green-dark) 100%);
+}
+
+/* Texture feltro */
+.stats-root::before {
+  content: ''; position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
+}
+
+/* Bordo dorato */
+.stats-root::after {
+  content: ''; position: absolute; inset: 18px;
+  border: 2px solid var(--gold); border-radius: 24px;
+  opacity: 0.55; pointer-events: none; z-index: 1;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,0,0,0.5);
+}
+
+/* ── Contenuto centrale ── */
+.stats-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 36px;
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.stats-content.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Titolo ── */
+.stats-title-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.stats-title {
+  font-family: 'Cinzel Decorative', cursive; font-weight: 900;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1; letter-spacing: 0.04em; text-align: center;
+  background: linear-gradient(160deg,
+    var(--gold-shine) 0%, var(--gold-light) 30%,
+    var(--gold) 55%, #a07428 80%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.7)) drop-shadow(0 2px 4px rgba(0,0,0,0.9));
+}
+.stats-underline {
+  width: 60%; height: 2px; border-radius: 2px; opacity: 0.7;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ── Griglia box ── */
+/* Prima riga: 3 colonne, seconda riga: 2 colonne centrate */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 16px;
+  width: clamp(300px, 70vw, 600px);
+}
+
+/* Gli ultimi 2 box occupano le colonne centrali della griglia a 3 */
+.stats-grid .stat-box:nth-child(4) { grid-column: 1 / 2; margin-left: auto; width: 100%; }
+.stats-grid .stat-box:nth-child(5) { grid-column: 2 / 4; margin-right: auto; width: 100%; }
+
+/* ── Singolo box ── */
+.stat-box {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 6px;
+  padding: 20px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 0 0 1.5px rgba(201,168,76,0.25),
+              0 4px 16px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-box:hover {
+  transform: translateY(-3px);
+  box-shadow: inset 0 0 0 1.5px rgba(201,168,76,0.55),
+              0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* Box vittorie evidenziato in oro */
+.stat-box--highlight {
+  background: rgba(201,168,76,0.12);
+  box-shadow: inset 0 0 0 1.5px rgba(201,168,76,0.6),
+              0 4px 20px rgba(201,168,76,0.2);
+}
+
+.stat-value {
+  font-family: 'Cinzel Decorative', cursive; font-weight: 900;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--gold-light);
+  line-height: 1;
+}
+.stat-label {
+  font-size: clamp(0.6rem, 1vw, 0.75rem);
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(201,168,76,0.55);
+}
+
+/* ── Win rate ── */
+.winrate-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.winrate-number {
+  font-family: 'Cinzel Decorative', cursive; font-weight: 900;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  background: linear-gradient(160deg, var(--gold-shine) 0%, var(--gold-light) 40%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(201,168,76,0.4));
+  line-height: 1;
+}
+.winrate-label {
+  font-size: clamp(0.65rem, 1vw, 0.8rem);
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: rgba(201,168,76,0.5);
+}
+.best-streak {
+  margin-top: 4px;
+  font-size: clamp(0.6rem, 0.9vw, 0.72rem);
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(201,168,76,0.35);
+}
+
+/* ── Bottone ← Home ── */
+.btn-back {
+  position: absolute; top: 36px; left: 44px; z-index: 10;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.8rem, 1.2vw, 0.95rem); letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold-light);
+  background: rgba(255,255,255,0.06); backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 0 0 1.5px rgba(201,168,76,0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn-back:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: rgba(255,255,255,0.11);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(201,168,76,0.8);
+}
+
+/* ── Bottone Reset (basso destra) ── */
+.btn-reset {
+  position: absolute; bottom: 36px; right: 44px; z-index: 10;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.7rem, 1vw, 0.85rem); letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(255,100,100,0.7);
+  background: rgba(255,255,255,0.04); backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 0 0 1.5px rgba(255,100,100,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.btn-reset:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: rgba(255,80,80,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(255,100,100,0.5);
+  color: rgba(255,120,120,0.95);
+}
+/* Stato di conferma: diventa più rosso */
+.btn-reset--confirm {
+  color: #ff6060;
+  background: rgba(255,60,60,0.12);
+  box-shadow: 0 4px 20px rgba(255,60,60,0.25), inset 0 0 0 1.5px rgba(255,80,80,0.6);
+}
