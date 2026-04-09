@@ -1,0 +1,10 @@
+{
+  "pietro": {
+    "giocate": 0,
+    "vittorie": 0,
+    "sconfitte": 0,
+    "abbandonate": 0,
+    "streak": 0,
+    "bestStreak": 0
+  }
+}

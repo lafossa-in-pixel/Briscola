@@ -1,0 +1,139 @@
+/*Gestisce tutta la grafica di Welcome*/
+
+/*Carica da Google Fonts due fonts: Cinzel Decorative per il titolo e Cinzel per il resto*/
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&display=swap');
+/*Il contenitore che occupa tutta la pagina. Centra tutto sia orizzonatalmente che verticalmente con flexbox.
+Nasconde tutto quello che esce dai bordi con hidden. Applica lo sfondo verde feltro a tutto il box. Ellisse centrale che sfuma
+gradualmente il colore avvicinandosi al centro dando l'effetto di punto di luce*/
+.welcome-root {
+  width: 100vw; height: 100vh;/*Occupa tutto lo schermo visibile*/
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; font-family: 'Cinzel', serif;
+  background-color: var(--green-dark);
+  background-image: radial-gradient(ellipse 80% 70% at 50% 40%,
+    var(--green-felt) 0%, var(--green-mid) 55%, var(--green-dark) 100%);
+}
+/*Elemento pseudo-invisible che copre tutto lo sfondo con un pattern SVG di puntini bianchi semitrasparenti, dando l'effetto feltro vero */
+.welcome-root::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  /*Data URL per incorporare il file SVG. Puntino bianco 4x4px ripetuto su tutto lo sfondo*/
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
+}
+/*Bordo dorato intorno a tutta la pagina. Colore oro con ombra. 18px dal bordo*/
+.welcome-root::after {
+  content: ''; position: absolute; inset: 18px; pointer-events: none; z-index: 1;
+  border: 2px solid var(--gold); border-radius: 24px; opacity: 0.55;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,0,0,0.5);
+}
+/*Box centrale, inizialmente invisibile. Quando la classe diventa visibile entra dopo 0.8sec*/
+.content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.content.visible { opacity: 1; transform: translateY(0); }
+
+.title-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: 36px;
+}
+/*Sottotitolo*/
+.title-subtitle {
+  font-weight: 600; font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+  letter-spacing: 0.55em; color: var(--gold); text-transform: uppercase;
+  opacity: 0.85; margin-bottom: 6px;
+}
+/*Titolo Briscola. Non ha un colore solido ma un gradiente applicatoal testo*/
+.title {
+  font-family: 'Cinzel Decorative', cursive; font-weight: 900;
+  font-size: clamp(2.8rem, 7vw, 5.5rem); line-height: 0.9;
+  letter-spacing: 0.04em; text-align: center;
+  background: linear-gradient(160deg,
+    var(--gold-shine) 0%, var(--gold-light) 30%,
+    var(--gold) 55%, #a07428 80%, var(--gold) 100%);
+  /*Ritagliano il colore sulle lettere, creando l'effetto oro sfumato*/
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.7)) drop-shadow(0 2px 4px rgba(0,0,0,0.9));
+}
+/*Linea dorata che sottolinea il testo. transparent-gold-transparent da effetto fading*/
+.title-underline {
+  width: 60%; height: 2px; margin-top: 10px; border-radius: 2px; opacity: 0.7;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+/*Sezione di inserimento testo*/
+.form-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  width: clamp(260px, 40vw, 380px);
+  animation: fade-up 0.7s 0.3s ease both;
+}
+/*Scritta nel form*/
+.form-label {
+  font-size: clamp(0.6rem, 1vw, 0.75rem);
+  letter-spacing: 0.35em; color: rgba(201,168,76,0.55); text-transform: uppercase;
+  align-self: flex-start; margin-bottom: 2px;
+}
+/*Zona di inserimento testo. Quando l'utente ci clicca da l'effetto illuminazione. Bordo e alone dorato*/
+.form-input {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--cream);
+  border: 1.5px solid rgba(201,168,76,0.5);
+  border-radius: 12px;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  color: #1a0e00;
+  outline: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-input::placeholder { color: rgba(26,14,0,0.28); }
+.form-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 3px rgba(201,168,76,0.25),
+              inset 0 1px 0 rgba(255,255,255,0.9);
+}
+/*Il bottone dorato per il cambio pagina. Scritta ENTRA*/
+.btn-entra {
+  margin-top: 8px; width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: clamp(12px, 2vw, 16px) clamp(28px, 4vw, 48px);
+  border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem); letter-spacing: 0.12em;
+  text-transform: uppercase; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #c9a84c 0%, #f0d080 45%, #c9a84c 100%);
+  color: #1a0e00;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.5), 0 2px 6px rgba(0,0,0,0.4),
+              inset 0 1px 0 rgba(255,255,255,0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+/*Username non ancora inserito. Effetto opaco(35%) -> bottone disattivato*/
+.btn-entra:disabled {
+  opacity: 0.35; cursor: not-allowed;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+/*Hover regola il passaggio del cursore sul bottone. Ingrandisce il bottone leggermente*/
+.btn-entra:not(:disabled):hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 32px rgba(201,168,76,0.6), 0 4px 12px rgba(0,0,0,0.4),
+              inset 0 1px 0 rgba(255,255,255,0.5);
+}
+/*Username inserito, bottone schiacciabile. Feedback al click*/
+.btn-entra:not(:disabled):active { transform: scale(0.96); }
+.btn-entra::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,0); transition: background 0.2s ease;
+}
+.btn-entra:not(:disabled):hover::before { background: rgba(255,255,255,0.1); }
+/*Effetti di entrata. Prima entra il form e poi la riga finale*/
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tagline {
+  margin-top: 32px; font-size: clamp(0.6rem, 1vw, 0.72rem);
+  letter-spacing: 0.3em; color: rgba(201,168,76,0.4); text-transform: uppercase;
+  animation: fade-up 0.7s 0.55s ease both;
+}

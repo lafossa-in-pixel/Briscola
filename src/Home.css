@@ -1,38 +1,44 @@
+/*Gestisce tutta la grafica della Home*/
+
+/*Carica da Google Fonts due fonts: Cinzel Decorative per il titolo e Cinzel per il resto*/
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&display=swap');
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Variabili colore globali */
+/*Variabili colore globali condivise con tutte le altre pagine*/
 :root {
   --green-dark: #0d3b1a; --green-mid: #145a2c; --green-felt: #1a7a3a;
   --gold: #c9a84c; --gold-light: #f0d080; --gold-shine: #fff8dc; --cream: #fdf6e3;
 }
 html, body, #root { width: 100%; height: 100%; overflow: hidden; }
 
-/* ── Sfondo: tavolo da gioco ── */
+/*Il contenitore che occupa tutta la pagina. Centra tutto sia orizzontalmente che verticalmente con flexbox.
+Nasconde tutto quello che esce dai bordi con hidden. Applica lo sfondo verde feltro a tutto il box. Ellisse centrale che sfuma
+gradualmente il colore avvicinandosi al centro dando l'effetto di punto di luce*/
 .home-root {
   width: 100vw; height: 100vh;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   position: relative; overflow: hidden; font-family: 'Cinzel', serif;
   background-color: var(--green-dark);
-  /* Gradiente radiale che simula la luce al centro del tavolo */
   background-image: radial-gradient(ellipse 80% 70% at 50% 40%,
     var(--green-felt) 0%, var(--green-mid) 55%, var(--green-dark) 100%);
 }
-/* Texture feltro: pattern di puntini sottili sovrapposto allo sfondo */
+
+/*Elemento pseudo-invisibile che copre tutto lo sfondo con un pattern SVG di puntini bianchi semitrasparenti, dando l'effetto feltro vero*/
 .home-root::before {
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  /*Data URL per incorporare il file SVG. Puntino bianco 4x4px ripetuto su tutto lo sfondo*/
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
 }
-/* Bordo dorato interno */
+
+/*Bordo dorato intorno a tutta la pagina. Colore oro con ombra. 18px dal bordo*/
 .home-root::after {
   content: ''; position: absolute; inset: 18px; pointer-events: none; z-index: 1;
   border: 2px solid var(--gold); border-radius: 24px; opacity: 0.55;
   box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,0,0,0.5);
 }
 
-/* ── Contenuto centrale ── */
-/* Parte invisibile e abbassata finché la pagina non è caricata,
-   poi sale e diventa visibile (animazione di entrata) */
+/*Box centrale, inizialmente invisibile. Quando la classe diventa visibile entra dopo 0.8sec*/
 .content {
   position: relative; z-index: 2;
   display: flex; flex-direction: column; align-items: center; gap: 0;
@@ -41,38 +47,48 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
 }
 .content.visible { opacity: 1; transform: translateY(0); }
 
-/* ── Titolo ── */
+/*Wrappa il titolo e il sottotitolo. margin-bottom negativo fa sovrapporre
+le carte degli assi al titolo, creando l'effetto che emergano da sotto*/
 .title-wrap {
   display: flex; flex-direction: column; align-items: center;
-  margin-bottom: -28px; /* si sovrappone leggermente alle carte sotto */
-  z-index: 3; position: relative;
+  margin-bottom: -28px; z-index: 3; position: relative;
 }
+
+/*Sottotitolo sopra il titolo: piccolo, spaziato e dorato*/
 .title-subtitle {
   font-weight: 600; font-size: clamp(0.65rem, 1.2vw, 0.85rem);
   letter-spacing: 0.55em; color: var(--gold); text-transform: uppercase;
   opacity: 0.85; margin-bottom: 6px;
 }
+
+/*Titolo Briscola. Non ha un colore solido ma un gradiente applicato al testo.
+line-height 0.85 comprime l'altezza per avvicinare le carte al titolo*/
 .title {
   font-family: 'Cinzel Decorative', cursive; font-weight: 900;
   font-size: clamp(4rem, 10vw, 8.5rem); line-height: 0.85;
   letter-spacing: 0.04em; text-align: center;
-  /* Gradiente oro applicato al testo */
   background: linear-gradient(160deg,
     var(--gold-shine) 0%, var(--gold-light) 30%,
     var(--gold) 55%, #a07428 80%, var(--gold) 100%);
+  /*Ritagliano il gradiente sulle lettere, creando l'effetto oro sfumato*/
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   filter: drop-shadow(0 4px 16px rgba(0,0,0,0.7)) drop-shadow(0 2px 4px rgba(0,0,0,0.9));
 }
-/* Linea decorativa sotto il titolo */
+
+/*Linea dorata che sottolinea il titolo. transparent-gold-transparent da effetto fading*/
 .title-underline {
   width: 60%; height: 2px; margin-top: 8px; border-radius: 2px; opacity: 0.7;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 
-/* ── Carte ── */
+/*Riga delle quattro carte degli assi. z-index 2 le mette sopra il titolo*/
 .aces-row {
   display: flex; align-items: flex-start; position: relative; z-index: 2;
 }
+
+/*Singola carta asso. Dimensioni fluide con clamp.
+L'animazione card-float fa entrare ogni carta dal basso con rimbalzo.
+Il delay è impostato inline in JSX per sfalsare le quattro carte*/
 .ace-card {
   width: clamp(72px, 9vw, 108px); height: clamp(100px, 12.5vw, 152px);
   background: var(--cream); border-radius: 10px; position: relative;
@@ -80,57 +96,67 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4),
               inset 0 1px 0 rgba(255,255,255,0.9);
   transform-origin: bottom center; overflow: hidden;
-  /* Animazione di ingresso: le carte salgono dal basso */
-  animation: card-float 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+  animation: card-float 0.7s cubic-bezier(0.34,1.56,0.64,1) both; /*Bezier elastico per effetto rimbalzo*/
   cursor: default; transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-/* Hover: la carta si alza e torna dritta */
+
+/*Al passaggio del cursore la carta si alza e diventa dritta, !important sovrascrive la rotazione di default*/
 .ace-card:hover {
   transform: translateY(-14px) rotate(0deg) !important; z-index: 10;
   box-shadow: 0 24px 48px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.5),
               inset 0 1px 0 rgba(255,255,255,0.9);
 }
-/* Disposizione a ventaglio: ogni carta ha una rotazione diversa */
-.ace-card:nth-child(1) { transform: rotate(-9deg) translateY(6px); }
-.ace-card:nth-child(2) { transform: rotate(-3deg) translateY(2px); }
-.ace-card:nth-child(3) { transform: rotate(3deg)  translateY(2px); }
-.ace-card:nth-child(4) { transform: rotate(9deg)  translateY(6px); }
 
+/*Le quattro carte hanno rotazioni diverse per sembrare un mazzo a ventaglio*/
+.ace-card:nth-child(1) { transform: rotate(-9deg) translateY(6px); } /*Prima carta: inclinata a sinistra*/
+.ace-card:nth-child(2) { transform: rotate(-3deg) translateY(2px); } /*Seconda carta: leggermente a sinistra*/
+.ace-card:nth-child(3) { transform: rotate(3deg)  translateY(2px); } /*Terza carta: leggermente a destra*/
+.ace-card:nth-child(4) { transform: rotate(9deg)  translateY(6px); } /*Quarta carta: inclinata a destra*/
+
+/*Animazione entrata: le carte partono in basso rimpicciolite e salgono fino alla posizione finale*/
 @keyframes card-float {
   0%   { opacity: 0; transform: translateY(60px) scale(0.8); }
   100% { opacity: 1; }
 }
+
+/*Contenuto interno della carta: icona piccola in alto, grande al centro, piccola capovolta in basso*/
 .ace-inner {
   width: 100%; height: 100%; padding: 7px 8px;
   display: flex; flex-direction: column; justify-content: space-between;
   position: relative;
 }
-.corner-top  { align-self: flex-start; }
-.corner-bottom { align-self: flex-end; transform: rotate(180deg); }
-/* Simbolo grande centrato nella carta */
+.corner-top    { align-self: flex-start; }
+.corner-bottom { align-self: flex-end; transform: rotate(180deg); } /*Capovolta per la convenzione delle carte*/
+
+/*Icona centrale: posizionata in assoluto al centro esatto della carta*/
 .ace-center {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   display: flex; align-items: center; justify-content: center;
   filter: drop-shadow(0 2px 5px rgba(0,0,0,0.14));
 }
-/* Riflesso lucido sul lato sinistro della carta */
+
+/*Riflesso luminoso sulla metà sinistra della carta, simula una luce che colpisce la carta*/
 .ace-shine {
   position: absolute; top: 0; left: 0; width: 50%; height: 100%;
   background: linear-gradient(105deg, rgba(255,255,255,0.32) 0%, transparent 60%);
   border-radius: 10px 0 0 10px; pointer-events: none;
 }
 
-/* ── Bottoni ── */
+/*Riga dei due bottoni Play e Stats. Appare con animazione fade-up ritardata di 0.55s*/
 .buttons-row {
   display: flex; gap: clamp(16px, 3vw, 32px);
   margin-top: clamp(32px, 5vw, 52px);
   animation: fade-up 0.7s 0.55s ease both;
 }
-/* Animazione riutilizzabile: sale dal basso con fade */
+
+/*Animazione entrata dal basso per bottoni e tagline*/
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/*Stile base condiviso da btn-play e btn-stats.
+Il ::before trasparente permette un overlay bianco al passaggio del cursore senza cambiare il colore di sfondo*/
 .btn {
   display: flex; align-items: center; gap: 10px;
   padding: clamp(12px, 2vw, 16px) clamp(28px, 4vw, 48px);
@@ -140,15 +166,14 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   text-transform: uppercase; position: relative; overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-/* Overlay bianco semi-trasparente al passaggio del mouse */
 .btn::before {
   content: ''; position: absolute; inset: 0;
   background: rgba(255,255,255,0); transition: background 0.2s ease;
 }
-.btn:hover::before { background: rgba(255,255,255,0.1); }
-.btn:active { transform: scale(0.96) !important; }
+.btn:hover::before  { background: rgba(255,255,255,0.1); } /*Overlay bianco al hover*/
+.btn:active { transform: scale(0.96) !important; }          /*Si schiaccia al click*/
 
-/* Bottone Play: sfondo oro pieno */
+/*Bottone Play: dorato pieno, testo scuro. È il bottone principale (colorazione accattivante)*/
 .btn-play {
   background: linear-gradient(135deg, #c9a84c 0%, #f0d080 45%, #c9a84c 100%);
   color: #1a0e00;
@@ -160,7 +185,8 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   box-shadow: 0 10px 32px rgba(201,168,76,0.6), 0 4px 12px rgba(0,0,0,0.4),
               inset 0 1px 0 rgba(255,255,255,0.5);
 }
-/* Bottone Stats: sfondo trasparente con bordo dorato */
+
+/*Bottone Stats: vetro semitrasparente con bordo dorato, secondario rispetto a Play*/
 .btn-stats {
   background: rgba(255,255,255,0.06); color: var(--gold-light);
   backdrop-filter: blur(6px);
@@ -174,9 +200,55 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
 }
 .btn-icon { display: flex; align-items: center; opacity: 0.9; }
 
-/* ── Scritta in basso ── */
+/*Scritta Multiplayer Online sotto i bottoni. Appare con animazione ritardata di 0.75s*/
 .tagline {
   margin-top: 28px; font-size: clamp(0.65rem, 1vw, 0.78rem);
   letter-spacing: 0.3em; color: rgba(201,168,76,0.45); text-transform: uppercase;
   animation: fade-up 0.7s 0.75s ease both;
 }
+
+/*Username del giocatore in alto a sinistra*/
+.home-username {
+  position: absolute; top: 36px; left: 44px; z-index: 10;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.75rem, 1.1vw, 0.9rem); letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--gold-light);
+  opacity: 0.85;
+}
+
+/*Bottone Utente in alto a destra. Effetto vetro con backdrop-filter*/
+.home-settings-btn {
+  position: absolute; top: 36px; right: 44px; z-index: 10;
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  color: var(--gold-light); background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 0 0 1.5px rgba(201,168,76,0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+/*Al passaggio del cursore si alza leggermente e il bordo dorato diventa più visibile*/
+.home-settings-btn:hover {
+  transform: translateY(-2px); background: rgba(255,255,255,0.11);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(201,168,76,0.8);
+}
+
+/*Stile base condiviso dai bottoni Classifica e Info in basso agli angoli*/
+.home-corner-btn {
+  position: absolute; bottom: 30px; z-index: 10;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.7rem, 1vw, 0.82rem); letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gold-light);
+  background: rgba(255,255,255,0.06); backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 0 0 1.5px rgba(201,168,76,0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+/*Al passaggio del cursore si alza leggermente e il bordo dorato diventa più visibile*/
+.home-corner-btn:hover {
+  transform: translateY(-3px) scale(1.05); background: rgba(255,255,255,0.11);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(201,168,76,0.8);
+}
+.home-leaderboard-btn { left: 44px; }  /*Classifica in basso a sinistra*/
+.home-info-btn        { right: 44px; } /*Info in basso a destra*/

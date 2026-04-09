@@ -1,0 +1,124 @@
+/*Gestisce tutta la grafica di Leaderboard*/
+
+/*Carica da Google Fonts due fonts: Cinzel Decorative per il titolo e Cinzel per il resto*/
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&display=swap');
+
+/*Il contenitore che occupa tutta la pagina. Centra tutto sia orizzontalmente che verticalmente con flexbox.
+Nasconde tutto quello che esce dai bordi con hidden. Applica lo sfondo verde feltro a tutto il box. Ellisse centrale che sfuma
+gradualmente il colore avvicinandosi al centro dando l'effetto di punto di luce*/
+.lb-root {
+  width: 100vw; height: 100vh; /*Occupa tutto lo schermo visibile*/
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; font-family: 'Cinzel', serif;
+  background-color: var(--green-dark);
+  background-image: radial-gradient(ellipse 80% 70% at 50% 40%,
+    var(--green-felt) 0%, var(--green-mid) 55%, var(--green-dark) 100%);
+}
+
+/*Elemento pseudo-invisibile che copre tutto lo sfondo con un pattern SVG di puntini bianchi semitrasparenti, dando l'effetto feltro vero*/
+.lb-root::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  /*Data URL per incorporare il file SVG. Puntino bianco 4x4px ripetuto su tutto lo sfondo*/
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
+}
+
+/*Bordo dorato intorno a tutta la pagina. Colore oro con ombra. 18px dal bordo*/
+.lb-root::after {
+  content: ''; position: absolute; inset: 18px; pointer-events: none; z-index: 1;
+  border: 2px solid var(--gold); border-radius: 24px; opacity: 0.55;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,0,0,0.5);
+}
+
+/*Box centrale, inizialmente invisibile. Quando la classe diventa visibile entra dopo 0.8sec*/
+.lb-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 32px;
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  width: 100%; max-width: 560px; padding: 0 24px;
+}
+.lb-content.visible { opacity: 1; transform: translateY(0); }
+
+/*Wrappa il titolo e la sottolineatura*/
+.lb-title-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+/*Titolo Classifica. Non ha un colore solido ma un gradiente applicato al testo*/
+.lb-title {
+  font-family: 'Cinzel Decorative', cursive; font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  background: linear-gradient(160deg, var(--gold-shine) 0%, var(--gold-light) 35%, var(--gold) 65%, #a07428 100%);
+  /*Ritagliano il gradiente sulle lettere, creando l'effetto oro sfumato*/
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.7));
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/*Linea dorata che sottolinea il titolo. transparent-gold-transparent da effetto fading*/
+.lb-underline {
+  width: 80%; height: 2px; border-radius: 2px; opacity: 0.6;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/*Tabella della classifica*/
+.lb-table { width: 100%; border-collapse: collapse; font-family: 'Cinzel', serif; }
+
+/*Separatore dorato sotto l'intestazione*/
+.lb-table thead tr { border-bottom: 1px solid rgba(201,168,76,0.4); }
+
+/*Intestazioni colonne: testo dorato tenue, maiuscolo e spaziato*/
+.lb-table th {
+  padding: 10px 14px; text-align: left;
+  font-size: clamp(0.65rem, 1vw, 0.78rem); letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(240,208,128,0.6); font-weight: 600;
+}
+/*Colonne Giocate e Vinte centrate*/
+.lb-table th:nth-child(3), .lb-table th:nth-child(4) { text-align: center; }
+
+/*Ogni riga ha un separatore sottile e un hover con sfondo bianco quasi invisibile*/
+.lb-table tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.2s ease;
+}
+.lb-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+
+.lb-table td {
+  padding: 13px 14px;
+  font-size: clamp(0.82rem, 1.2vw, 0.96rem);
+  color: var(--cream); letter-spacing: 0.05em;
+}
+/*Colonne Giocate e Vinte centrate*/
+.lb-table td:nth-child(3), .lb-table td:nth-child(4) { text-align: center; }
+
+.lb-rank { font-size: 1.2rem; width: 48px; } /*Colonna posizione: medaglia o numero*/
+.lb-name { font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; } /*Nome giocatore in maiuscolo*/
+.lb-wins { color: var(--gold-light); font-weight: 600; } /*Vittorie evidenziate in dorato*/
+
+/*Riga del giocatore loggato: sfondo dorato tenue e bordo sinistro dorato*/
+.lb-row--me {
+  background: rgba(201,168,76,0.08) !important;
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+.lb-row--me .lb-name { color: var(--gold-light); } /*Nome del giocatore loggato in dorato*/
+
+/*Scritta (tu) accanto al proprio username*/
+.lb-you { font-size: 0.75em; opacity: 0.7; font-weight: 400; text-transform: lowercase; letter-spacing: 0.05em; }
+
+/*Messaggio di errore o classifica vuota*/
+.lb-error { color: rgba(240,208,128,0.5); font-size: 0.9rem; letter-spacing: 0.15em; text-transform: uppercase; }
+
+/*Bottone ← Home posizionato in alto a sinistra sopra tutto*/
+.btn-back {
+  position: absolute; top: 36px; left: 44px; z-index: 10;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.7rem, 1vw, 0.82rem); letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--gold-light);
+  background: rgba(255,255,255,0.06); backdrop-filter: blur(6px);
+  border: none; cursor: pointer; padding: 10px 18px; border-radius: 50px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 0 0 1.5px rgba(201,168,76,0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+/*al passaggio del cursore si alza leggermente e il bordo dorato diventa più visibile*/
+.btn-back:hover {
+  transform: translateY(-2px); background: rgba(255,255,255,0.11);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(201,168,76,0.8);
+}

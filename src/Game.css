@@ -104,3 +104,82 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   background: rgba(255,255,255,0.11);
   box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(201,168,76,0.8);
 }
+/* ── Indicatore del Turno ── */
+.turn-indicator {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background-color: rgba(0,0,0,0.7);
+  color: white;
+  font-weight: bold;
+  z-index: 50;
+  font-family: 'Cinzel', serif;
+  transition: all 0.3s;
+}
+
+/* ── Numero di carte rimanenti nel mazzo (messo sopra al logo) ── */
+/* ── Numero di carte rimanenti nel mazzo (Badge in alto a destra) ── */
+.deck-count {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 10;
+  color: white;
+  background: rgba(0,0,0,0.85);
+  padding: 4px 7px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: 1px solid var(--gold);
+}
+@media (max-width: 768px) {
+  .game_table {
+    height: 100dvh;
+    padding-bottom: 15px;
+  }
+
+  /* Alziamo la mano del giocatore per fare spazio */
+  .player_hand {
+    margin-bottom: 70px !important;
+  }
+
+  /* Spostiamo il turno in basso a destra (sopra la mano) */
+  .turn-indicator {
+    top: auto;
+    bottom: 50px;
+    right: 15px;
+    font-size: 0.8rem;
+    padding: 8px 14px;
+  }
+
+  .Card, .point_pile {
+    width: 55px;
+    height: 85px;
+    font-size: 12px;
+  }
+
+  .center_table {
+    gap: 15px;
+    padding: 0 5px;
+  }
+
+  .deck {
+    width: 60px;
+    height: 90px;
+  }
+
+  .briscola_card {
+    left: 50px;
+    top: 10px;
+  }
+
+  .play_area {
+    gap: 15px;
+  }
+
+  .Card svg {
+    transform: scale(0.75);
+  }
+}

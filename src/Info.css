@@ -1,0 +1,129 @@
+/*Gestisce tutta la grafica di info*/
+
+/*Carica da Google Fonts due fonts: Cinzel Decorative per il titolo e Cinzel per il resto*/
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&display=swap');
+/*Il contenitore che occupa tutta la pagina. Centra tutto sia orizzonatalmente che verticalmente con flexbox.
+Nasconde tutto quello che esce dai bordi con hidden. Applica lo sfondo verde feltro a tutto il box. Ellisse centrale che sfuma
+gradualmente il colore avvicinandosi al centro dando l'effetto di punto di luce*/
+.info-root {
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; font-family: 'Cinzel', serif;
+  background-color: var(--green-dark);
+  background-image: radial-gradient(ellipse 80% 70% at 50% 40%,
+    var(--green-felt) 0%, var(--green-mid) 55%, var(--green-dark) 100%);
+}
+/*Elemento pseudo-invisible che copre tutto lo sfondo con un pattern SVG di puntini bianchi semitrasparenti, dando l'effetto feltro vero */
+.info-root::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
+}
+/*Bordo dorato intorno a tutta la pagina. Colore oro con ombra. 18px dal bordo*/
+.info-root::after {
+  content: ''; position: absolute; inset: 18px; pointer-events: none; z-index: 1;
+  border: 2px solid var(--gold); border-radius: 24px; opacity: 0.55;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,0,0,0.5);
+}
+/*Box centrale, inizialmente invisibile. Quando la classe diventa visibile entra dopo 0.8sec*/
+
+.info-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 28px;
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  width: 100%; max-width: 480px; padding: 0 24px;
+}
+.info-content.visible { opacity: 1; transform: translateY(0); }
+.info-title-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+/*Titolo Info. Non ha un colore solido ma un gradiente applicatoal testo*/
+
+.info-title {
+  font-family: 'Cinzel Decorative', cursive; font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  background: linear-gradient(160deg, var(--gold-shine) 0%, var(--gold-light) 35%, var(--gold) 65%, #a07428 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.7));
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+/*Linea dorata che sottolinea il testo. transparent-gold-transparent da effetto fading*/
+
+.info-underline {
+  width: 60%; height: 2px; border-radius: 2px; opacity: 0.6;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.info-section {
+  width: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-bottom: 20px; border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+/*Nessuna linea separatrice a fondo pagina*/
+.info-section:last-of-type { border-bottom: none; padding-bottom: 0; }
+.info-section-title {
+  font-size: clamp(0.65rem, 1vw, 0.78rem); letter-spacing: 0.3em;
+  text-transform: uppercase; color: rgba(240,208,128,0.55); font-weight: 600;
+}
+/*Testo descrittivo*/
+.info-text {
+  font-size: clamp(0.82rem, 1.2vw, 0.94rem); color: var(--cream);
+  letter-spacing: 0.04em; line-height: 1.75; opacity: 0.85;
+  font-family: 'Cinzel', serif; max-width: 100%;
+}
+/*Zona dei crediti*/
+.info-credits { display: flex; flex-direction: column; gap: 10px; }
+/*Sfondo bianco quasi trasparente*/
+.info-credit-row {
+  display: flex; flex-direction: row;
+  align-items: flex-start; justify-content: space-around;/*justify distribuisce i 3 sviluppatori in modo uniforme sulla riga*/
+  padding: 10px 16px; border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  box-shadow: inset 0 0 0 1px rgba(201,168,76,0.2);
+  gap: 12px;
+}
+
+/*Ogni blocco sviluppatore ha la stessa larghezza indipendentemente dal nome */
+.info-credit-item {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  flex: 1;
+}
+/*Nome sviluppatore*/
+.info-credit-name {
+  font-size: clamp(0.82rem, 1.2vw, 0.96rem); font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-light);
+  text-align: center;
+}
+/*Ruolo=sviluppatore*/
+.info-credit-role {
+  font-size: clamp(0.65rem, 0.9vw, 0.78rem); letter-spacing: 0.15em;
+  text-transform: uppercase; color: rgba(240,208,128,0.5);
+  text-align: center;
+}
+.info-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+/*Contenitore a pillola per le tenologie usate*/
+.info-tag {
+  padding: 6px 16px; border-radius: 50px;
+  font-size: clamp(0.65rem, 0.9vw, 0.78rem); letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--gold-light);
+  background: rgba(255,255,255,0.06);
+  box-shadow: inset 0 0 0 1px rgba(201,168,76,0.35);
+}
+.info-version {
+  font-size: clamp(0.6rem, 0.85vw, 0.72rem); letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(201,168,76,0.35);
+}
+/*Poiszionato in modo assoluto in alto a sinistra. Torna a home*/
+.btn-back {
+  position: absolute; top: 36px; left: 44px; z-index: 10;
+  font-family: 'Cinzel', serif; font-weight: 600;
+  font-size: clamp(0.7rem, 1vw, 0.82rem); letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--gold-light);
+  background: rgba(255,255,255,0.06); backdrop-filter: blur(6px);
+  border: none; cursor: pointer; padding: 10px 18px; border-radius: 50px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 0 0 1.5px rgba(201,168,76,0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+/*Effetto bottone quando ci passa su il cursore*/
+.btn-back:hover {
+  transform: translateY(-2px); background: rgba(255,255,255,0.11);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(201,168,76,0.8);
+}
