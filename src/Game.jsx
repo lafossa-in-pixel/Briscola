@@ -117,9 +117,16 @@ export default function Game({ changePage, connection, role, username }) {
       }
     };
     const handleClose = () => {
-      setGameOverMessage(prev => prev || `${oppUsername} ha abbandonato la partita.`);
-      updateStats(username, 'abandon');
-    };
+      setGameOverMessage(prev => {
+        if(!prev){
+          //La partita era ancora in corso, segno abbandono
+          updateStats(username, 'abandon');
+          return `${oppUsername} ha abbandonato la partita.`;
+        }
+      return prev;//Partita gia finita
+      });
+    
+    }
     connection.on('data', handleData);
     connection.on('close', handleClose);
     return () => {
@@ -271,7 +278,10 @@ export default function Game({ changePage, connection, role, username }) {
   const oppPoints = role === 1 ? pointsDeck2 : pointsDeck1;
 
   function handleExit() {
-    if (connection) connection.close();
+    if (connection){
+      connection.close();
+      connection.close();
+    }
     changePage('home');
   }
 
