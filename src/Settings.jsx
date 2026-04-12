@@ -27,7 +27,7 @@ export default function Settings({ changePage, username, setUsername }) {
 
  /*Rinomina l'utente nel backend(se effettivamente l'username è cambiato). Manda una richiesta PUT al backend
   per modificare l'username. Col comando JSON.stringify convere l'oggetto JS(trimmed) in una stringa JSON da inviare.*/    
-    fetch(`http://localhost:3001/api/utenti/${username}/rename`, {
+    fetch(`https://briscola-production.up.railway.app/api/utenti/${username}/rename`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ newUsername: trimmed }),
@@ -56,7 +56,7 @@ export default function Settings({ changePage, username, setUsername }) {
      /*Elimina l'utente sul backend. Manda una richiesta DELETE al backend per eliminare l'utente.
     Col comando JSON.stringify convere l'oggetto JS(trimmed) in una stringa JSON da inviare.*/
     
-    fetch(`http://localhost:3001/api/utenti/${username}`, { method: 'DELETE' })
+    fetch(`https://briscola-production.up.railway.app/api/utenti/${username}`, { method: 'DELETE' })
       //Rimuove l'username dal localStorage e resetta lo stato (torna a Welcome)
       .then(() => {
         localStorage.removeItem('briscolaUsername');

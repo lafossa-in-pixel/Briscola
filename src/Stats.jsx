@@ -32,7 +32,7 @@ export default function Stats({ changePage, username }) {
 
   useEffect(() => {
     //GET /api/stats/:username — recupera le statistiche del giocatore dal backend
-    fetch(`http://localhost:3001/api/stats/${username}`)
+    fetch(`https://briscola-production.up.railway.app/api/stats/${username}`)
       .then((res) => res.json()) //Converte la risposta HTTP in oggetto JS
       .then((data) => {
         /*Unisce i dati ricevuti con i DEFAULT_STATS: se manca qualche campo
@@ -83,7 +83,7 @@ export default function Stats({ changePage, username }) {
     }
     /*Aggiorna le statistiche del giocatore a quelle di default. Manda una richiesta POST al backend per aggiornare le statistiche utente.
     Col comando JSON.stringify convere l'oggetto JS in una stringa JSON da inviare.*/    
-    fetch(`http://localhost:3001/api/stats/${username}`, {
+    fetch(`https://briscola-production.up.railway.app/api/stats/${username}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(DEFAULT_STATS),

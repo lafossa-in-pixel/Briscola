@@ -26,7 +26,7 @@ function handleEntra() {
 
   /*Registra l'utente sul backend (solo se non esiste già). Manda una richiesta POST al backend per registrare l'utente.
   Col comando JSON.stringify convere l'oggetto JS(trimmed) in una stringa JSON da inviare.*/
-  fetch('http://localhost:3001/api/utenti', {
+  fetch('https://briscola-production.up.railway.app/api/utenti', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: trimmed }),

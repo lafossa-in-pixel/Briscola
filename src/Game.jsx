@@ -41,7 +41,7 @@ Funzione che permette di aggiornare le statitiche del giocatore (vinte, perse, a
 */
 function updateStats(username, result) {
   if (!username) return;
-  fetch(`http://localhost:3001/api/stats/${username}`)
+  fetch(`https://briscola-production.up.railway.app/api/stats/${username}`)
     .then(res => res.json())
     .then(stats => {
       const updated = { ...stats };
@@ -58,7 +58,7 @@ function updateStats(username, result) {
         updated.streak = 0;
       }
       // Manda una richiesta POST al backend per aggiornare le statistiche
-      return fetch(`http://localhost:3001/api/stats/${username}`, {
+      return fetch(`https://briscola-production.up.railway.app/api/stats/${username}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updated),

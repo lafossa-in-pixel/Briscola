@@ -16,7 +16,7 @@ export default function Leaderboard({ changePage, username }) {
 
   useEffect(() => {
     //GET /api/classifica — recupera i top 5 giocatori dal backend
-    fetch('http://localhost:3001/api/classifica')
+    fetch('https://briscola-production.up.railway.app/api/classifica')
       .then(res => res.json())//Converte la risposta HTTP in oggetto JS
       .then(data => {
         setClassifica(data);
