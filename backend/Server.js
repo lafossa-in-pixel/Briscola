@@ -14,7 +14,7 @@ const { ExpressPeerServer } = require('peer');
 /*Crea l'app express, definisce la porta su cui ascolterà il server
 e il percorso verso il db vero e proprio(stats.json). __dirname è la cartella di server.js(che è la stessa di stats.json)*/
 const app      = express();
-const PORT     = process.env.PORT || 3001;
+const PORT     = process.env.PORT || 3001; 
 const DB_PATH  = path.join(__dirname, 'stats.json');
 
 /*cors() permette al frontend(porta 5173) di chiamare direttamente il backedn(porta 3001) senza blocchi intermedi*/
@@ -99,9 +99,10 @@ app.get('/api/classifica', (req, res) => {
   res.json(classifica);
 });
 
-//Avvia il serve sulla porta 3001, stampando un messaggio quando è pronto
-const server = app.listen(PORT, () => console.log(`Server in ascolto su http://localhost:${PORT}`));
+//Avvia il serve sulla porta assegnata da Railway (o 3001 in locale)
+const server = app.listen(PORT, () => console.log(`Server in ascolto sulla porta ${PORT}`));
 
+/* Inizializzazione del centralino WebRTC (PeerServer) sulla rotta /peerjs */
 const peerServer = ExpressPeerServer(server, {
   debug: true,
   path: '/'
@@ -109,9 +110,10 @@ const peerServer = ExpressPeerServer(server, {
 
 app.use('/peerjs', peerServer);
 
+// Log per monitorare entrate e uscite dalla lobby sulla console di Railway
 peerServer.on('connection', (client) => {
-  console.log(`[PeerJS] Connesso: ${client.getId()}`);
+  console.log(`[PeerJS] Giocatore connesso: ${client.getId()}`);
 });
 peerServer.on('disconnect', (client) => {
-  console.log(`[PeerJS] Disconnesso: ${client.getId()}`);
+  console.log(`[PeerJS] Giocatore disconnesso: ${client.getId()}`);
 });
