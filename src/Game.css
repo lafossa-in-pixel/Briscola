@@ -1,15 +1,13 @@
+/*Importazione dei font ufficiali del gioco da Google Fonts (Cinzel Decorative/Cinzel)*/
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --green-dark: #0d3b1a; --green-mid: #145a2c; --green-felt: #1a7a3a;
-  --gold: #c9a84c; --gold-light: #f0d080; --cream: #fdf6e3;
-}
-
 html, body, #root { width: 100%; height: 100%; overflow: hidden; }
 
-/* ── Sfondo tavolo ── */
+/*Il contenitore che occupa tutta la pagina. Centra tutto sia orizzontalmente che verticalmente con flexbox.
+Nasconde tutto quello che esce dai bordi con hidden. Applica lo sfondo verde feltro a tutto il box. Ellisse centrale che sfuma
+gradualmente il colore avvicinandosi al centro dando l'effetto di punto di luce*/
 .game_table {
   background-color: var(--green-dark);
   background-image: radial-gradient(ellipse 80% 70% at 50% 40%,
@@ -20,20 +18,24 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   overflow: hidden; color: white;
   font-family: 'Cinzel', serif; position: relative;
 }
+/*Elemento pseudo-invisibile che copre tutto lo sfondo con un pattern SVG di puntini bianchi semitrasparenti, dando l'effetto feltro vero*/
 .game_table::before {
   content: ''; position: absolute; inset: 0;
   pointer-events: none; z-index: 0;
+  /*Data URL per incorporare il file SVG. Puntino bianco 4x4px ripetuto su tutto lo sfondo*/
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
 }
+/*Bordo dorato intorno a tutta la pagina. Colore oro con ombra. 18px dal bordo*/
 .game_table::after {
   content: ''; position: absolute; inset: 18px;
   border: 2px solid var(--gold); border-radius: 24px;
   opacity: 0.55; pointer-events: none; z-index: 1;
   box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,0,0,0.5);
 }
+/*Assicura che gli elementi del gioco stiano sopra gli effetti di sfondo*/
 .game_table > * { position: relative; z-index: 2; }
 
-/* ── Carta ── */
+/*Stile carta*/
 .Card {
   width: 70px; height: 110px;
   border-radius: 8px; border: 1px solid rgba(0,0,0,0.15);
@@ -43,12 +45,13 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   position: relative; overflow: hidden;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+/* Animazione checrea l'effetto "sollevato" quando ci si passa sopra con il mouse */
 .Card:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.9);
 }
 
-/* ── Dorso carta ── */
+/* Stile carta (dorso)*/
 .back {
   background-color: #8b1a1a;
   background-image: repeating-linear-gradient(
@@ -57,37 +60,39 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   display: flex; align-items: center; justify-content: center;
 }
 .back:hover { transform: none; }
+/* Logo UNIPR*/
 .back-logo {
   width: 38px; height: 38px;
   object-fit: contain; opacity: 1; pointer-events: none;
   filter: brightness(0) invert(1);
 }
 
-/* ── Mani ── */
+/* Contenitore delle 3 carte in mano, comprensivo di gap in mezzo */
 .hand { display: flex; justify-content: center; align-items: center; gap: 15px; padding: 20px; }
 .opponent_hand { margin-top: 10px; }
 .player_hand   { margin-bottom: 20px; }
 
-/* ── Centro tavolo ── */
+/*Centro tavolo */
 .center_table { display: flex; justify-content: space-around; align-items: center; flex: 1; }
 
-/* ── Mazzo ── */
+/* L'area del mazzo. È "relative" per permettere alla briscola (absolute)
+di posizionarsi esattamente in fondo al mazzo, ruotata di 90 gradi─*/
 .deck { position: relative; width: 120px; height: 120px; }
 .briscola_card { position: absolute; top: 5px; left: 80px; transform: rotate(90deg); z-index: 1; }
 .deck_card { position: absolute; top: 0; left: 0; z-index: 2; }
 .deck-count { color: white; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 50%; font-size: 0.8rem; font-weight: bold; }
 
-/* ── Area di gioco ── */
+/*Area di gioco */
 .play_area { display: flex; gap: 10px; }
 
-/* ── Zona punti ── */
+/* Area delle prese, mazzi di carte ruotati leggermente per dare l'idea del "mazzetto" */
 .points_area { display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 20px 0; }
 .point_pile  { position: relative; width: 70px; height: 110px; }
 .pile_card   { position: absolute; top: 0; left: 0; box-shadow: 1px 1px 6px rgba(0,0,0,0.7); }
 .opponent_points { margin-top: -30px; }
 .player_points   { margin-bottom: -30px; }
 
-/* ── Bottone ← Home ── */
+/*Bottone per torare alla home, usa il "glassmorphism" (backdrop-filter) per un effetto vetro sfocato */
 .btn-back {
   position: absolute; top: 36px; left: 44px; z-index: 10;
   display: flex; align-items: center; gap: 8px;
@@ -104,7 +109,7 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   background: rgba(255,255,255,0.11);
   box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 0 0 1.5px rgba(201,168,76,0.8);
 }
-/* ── Indicatore del Turno ── */
+/* Indicatore dinamico del turno (rosso/verde)*/
 .turn-indicator {
   position: absolute;
   top: 20px;
@@ -119,8 +124,8 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   transition: all 0.3s;
 }
 
-/* ── Numero di carte rimanenti nel mazzo (messo sopra al logo) ── */
-/* ── Numero di carte rimanenti nel mazzo (Badge in alto a destra) ── */
+
+/*Numero di carte rimanenti nel mazzo (pallino in alto a destra)*/
 .deck-count {
   position: absolute;
   top: 5px;
@@ -134,18 +139,20 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   font-weight: bold;
   border: 1px solid var(--gold);
 }
+/* Aggiustamenti per uno schermo stretto, applicati per chi gioca da mobile */
 @media (max-width: 768px) {
+  /* Alza leggermente il tavolo per centrarlo nella schermata */
   .game_table {
     height: 100dvh;
     padding-bottom: 15px;
   }
 
-  /* Alziamo la mano del giocatore per fare spazio */
+  /* Alza la mano del giocatore per fare spazio */
   .player_hand {
     margin-bottom: 70px !important;
   }
 
-  /* Spostiamo il turno in basso a destra (sopra la mano) */
+  /* Sposta il turno in basso a destra per evitare sovrapposizioni */
   .turn-indicator {
     top: auto;
     bottom: 50px;
@@ -153,32 +160,31 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
     font-size: 0.8rem;
     padding: 8px 14px;
   }
-
+  /* Rimpicciolisce tutte le carte e le prese dei punti per far entrare tutto nello schermo */
   .Card, .point_pile {
     width: 55px;
     height: 85px;
     font-size: 12px;
   }
-
+  /* Riduce gli spazi vuoti al centro del tavolo */
   .center_table {
     gap: 15px;
     padding: 0 5px;
   }
-
+  /* Ridimensiona lo spazio occupato dal mazzo e dalla briscola */
   .deck {
     width: 60px;
     height: 90px;
   }
-
   .briscola_card {
     left: 50px;
     top: 10px;
   }
-
+  /* Riduce la distanza tra le due carte giocate dai giocatori */
   .play_area {
     gap: 15px;
   }
-
+ /* Riduce la grandezza in proporzione di eventuali icone o SVG */
   .Card svg {
     transform: scale(0.75);
   }

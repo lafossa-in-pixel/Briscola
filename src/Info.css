@@ -99,7 +99,7 @@ gradualmente il colore avvicinandosi al centro dando l'effetto di punto di luce*
   text-align: center;
 }
 .info-tags { display: flex; flex-wrap: wrap; gap: 10px; }
-/*Contenitore a pillola per le tenologie usate*/
+/*Contenitore a pillola per le tecnologie usate*/
 .info-tag {
   padding: 6px 16px; border-radius: 50px;
   font-size: clamp(0.65rem, 0.9vw, 0.78rem); letter-spacing: 0.15em;
@@ -111,7 +111,7 @@ gradualmente il colore avvicinandosi al centro dando l'effetto di punto di luce*
   font-size: clamp(0.6rem, 0.85vw, 0.72rem); letter-spacing: 0.2em;
   text-transform: uppercase; color: rgba(201,168,76,0.35);
 }
-/*Poiszionato in modo assoluto in alto a sinistra. Torna a home*/
+/*Posizionato in modo assoluto in alto a sinistra. Torna a home*/
 .btn-back {
   position: absolute; top: 36px; left: 44px; z-index: 10;
   font-family: 'Cinzel', serif; font-weight: 600;
